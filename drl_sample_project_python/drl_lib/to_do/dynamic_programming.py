@@ -4,7 +4,11 @@ import random
 from ..do_not_touch.mdp_env_wrapper import Env1
 from ..do_not_touch.result_structures import ValueFunction, PolicyAndValueFunction
 import numpy as np
-
+try:
+    from grid_world import grid
+    print("&")
+except:
+    pass
 ########## GLOSSAIRE
 """
 s,s': Un état
@@ -57,7 +61,6 @@ class LineWorldEnv:
 
         self.p = np.zeros((len(self.S), len(self.A), len(self.S), len(self.R)))
 
-
         for s in self.S[1:-1]:
             if s == 1:
                 self.p[s, 0, s - 1, 0] = 1.0
@@ -70,7 +73,12 @@ class LineWorldEnv:
                 self.p[s, 1, s + 1, 1] = 1.0
 
 ########## DONE ##########
-def policy_evaluation(pi: np.ndarray, lwe: LineWorldEnv, theta=0.9999):
+def policy_evaluation_on_line_world(pi: np.ndarray, lwe: LineWorldEnv, theta=0.0000001):
+    """
+        Creates a Line World of 7 cells (leftmost and rightmost are terminal, with -1 and 1 reward respectively)
+        Launches a Policy Evaluation Algorithm in order to find the Value Function of a uniform random policy
+        Returns the Value function (V(s)) of this policy
+    """
     """
     _input:
         π: Stratégie (policy)
@@ -78,30 +86,13 @@ def policy_evaluation(pi: np.ndarray, lwe: LineWorldEnv, theta=0.9999):
     _params: theta > 0
 
     """
+
     # Initialisation de V(s)
-    V = np.random.random((len(lwe.S), len(lwe.A), len(lwe.S), len(lwe.R)))
+    V = np.random.random((len(lwe.S),))
+    gamma = 0.999
     # Exception des V terminaux
     V[0] = 0.0
     V[6] = 0.0
-
-    while True:
-        delta = 0
-        sum_of_policy = 0.0
-        for s in lwe.S[1:-1]:
-            v = V[s]
-            # π(a|s): Probabilité d'executer une action a depuis l'état s selon la stratégie π
-            for a in lwe.A:
-                sum_of_policy *= pi[s, a]
-            V = sum(pi[s, lwe.A]) * sum()
-            pass
-
-    """
-    # np.zeros((len(self.S), len(self.A), len(self.S), len(self.R)))
-
-    V = np.random.random((len(lwe.S),))
-    V[0] = 0.0
-    V[6] = 0.0
-    # print("type de V" ,type(V),"and :",V)
 
     while True:
         delta = 0
@@ -110,42 +101,19 @@ def policy_evaluation(pi: np.ndarray, lwe: LineWorldEnv, theta=0.9999):
             V[s] = 0.0
             for a in lwe.A:
                 total = 0.0
-                for s_p in lwe.S:
+                for sp in lwe.S:
                     for r in range(len(lwe.R)):
-                        total += lwe.p[s, a, s_p, r] * (lwe.R[r] + 0.999 * V[s_p])
+                        total += lwe.p[sp, a, s, r] * (lwe.R[r] + gamma * V[sp])
+                        pass
                 total *= pi[s, a]
                 V[s] += total
-            delta = max(delta, np.abs(v - V[s]))
+            delta = max(delta, abs(v - V[s]))
         if delta < theta:
             break
-    return V
-    
-    """
 
     return V
 
-
-########## DONE ##########
-def policy_evaluation_on_line_world() -> ValueFunction:
-    """
-    Creates a Line World of 7 cells (leftmost and rightmost are terminal, with -1 and 1 reward respectively)
-    Launches a Policy Evaluation Algorithm in order to find the Value Function of a uniform random policy
-    Returns the Value function (V(s)) of this policy
-    """
-
-    lwe = LineWorldEnv()
-
-    random_pi = np.ones((len(lwe.S), len(lwe.A))) * 1 / (len(lwe.S) - len(lwe.A))
-    print(random_pi)
-
-    V = policy_evaluation(random_pi, lwe)
-
-    result = {i: v for i, v in enumerate(V)}
-
-    return result
-
-
-def action_values(lwe: LineWorldEnv(), state, V, gamma=1):
+def action_values(lwe: LineWorldEnv, state, V, gamma=1):
     B = np.zeros(len(lwe.A))
     for i in lwe.A:  # 0, 1
         print(f"==> is is: {i}")
@@ -153,7 +121,6 @@ def action_values(lwe: LineWorldEnv(), state, V, gamma=1):
             print(f"==> je suis la {lwe.p[state][i]}")
             B[i] += probability * (reward + gamma * V[next_state])
     return B
-
 
 def policy_improvement(lwe: LineWorldEnv, V):
     policy = np.ones((len(lwe.S), len(lwe.A))) * 1 / (len(lwe.S) - len(lwe.A))
@@ -187,11 +154,79 @@ def policy_improvement(lwe: LineWorldEnv, V):
     #    return PolicyAndValueFunction(pi_dict, policy_evaluation(..., lwe))
 
 
-def policy_iteration_on_line_world() -> PolicyAndValueFunction:
+def policy_iteration_on_line_world(pi: np.ndarray, lwe: LineWorldEnv, theta=0.0000001) -> PolicyAndValueFunction:
     """
     Creates a Line World of 7 cells (leftmost and rightmost are terminal, with -1 and 1 reward respectively)
     Launches a Policy Iteration Algorithm in order to find the Optimal Policy and its Value Function
     Returns the Policy (Pi(s,a)) and its Value Function (V(s))
+    """
+
+
+    # Initialisation de V(s)
+    V = np.random.random((len(lwe.S),))
+    gamma = 0.999
+    # Exception des V terminaux
+    V[0] = 0.0
+    V[6] = 0.0
+
+    # Evaluation de la stratégie
+    while True:
+        delta = 0
+        for s in lwe.S:
+            v = V[s]
+            V[s] = 0.0
+            for a in lwe.A:
+                total = 0.0
+                for sp in lwe.S:
+                    for r in range(len(lwe.R)):
+                        total += lwe.p[sp, a, s, r] * (lwe.R[r] + gamma * V[sp])
+                        #total += lwe.p[sp, pi[s], s, r] * (lwe.R[r] + gamma * V[sp])
+                        pass
+                total *= pi[s, a]
+                V[s] += total
+            delta = max(delta, abs(v - V[s]))
+        if delta < theta:
+            break
+
+    # Amélioration de la stratégie
+    policy_stable = True
+    for s in lwe.S:
+        # old_action = pi[s]
+        old_action = pi[s]
+
+        ###################
+
+        for a in lwe.A:
+            total = 0.0
+            for sp in lwe.S:
+                for r in range(len(lwe.R)):
+                    total += lwe.p[sp, a, s, r] * (lwe.R[r] + gamma * V[sp])
+                    pass
+                #total *= pi[s, a]
+
+                new_action = np.argmax(total)
+
+            ###################
+            """
+            #for a in lwe.A:
+            for sp in lwe.S:
+                for r in range(len(lwe.R)):
+                    total += lwe.p[sp, V, s, r] * (lwe.R[r] + gamma * V[sp])
+            new_action = np.argmax(total)
+            """
+            print("old_action : ", old_action, end="\n")
+            print("new_action : ", new_action)
+            if old_action != new_action:
+                policy_stable = False
+
+        if policy_stable:
+            break
+
+    return V
+            
+
+
+
     """
     lwe = LineWorldEnv()
 
@@ -211,6 +246,7 @@ def policy_iteration_on_line_world() -> PolicyAndValueFunction:
         policy = copy.copy(new_policy)
 
     return policy
+    """
 
 
 def value_iteration_on_line_world() -> PolicyAndValueFunction:
@@ -272,7 +308,12 @@ def policy_evaluation_on_grid_world() -> ValueFunction:
     Returns the Value function (V(s)) of this policy
     """
     # TODO
-    pass
+    print("Grid World")
+    create_grid = grid()
+
+    print(f"rewards : {create_grid.rewards} ")
+
+
 
 
 def policy_iteration_on_grid_world() -> PolicyAndValueFunction:
@@ -329,7 +370,23 @@ def value_iteration_on_secret_env1() -> PolicyAndValueFunction:
 
 
 def demo():
-    print(policy_evaluation_on_line_world())
+    right_pi = np.zeros((len(LineWorldEnv().S), len(LineWorldEnv().A)))
+    right_pi[:, 1] = 1.0
+
+    left_pi = np.zeros((len(LineWorldEnv().S), len(LineWorldEnv().A)))
+    left_pi[:, 0] = 1.0
+
+    random_pi = np.ones((len(LineWorldEnv().S), len(LineWorldEnv().A))) * 0.5
+
+    # print(f"Stratégie tout le temps aller à droite: ", policy_evaluation_on_line_world(pi=right_pi, lwe=LineWorldEnv()))
+    # print(f"Stratégie tout le temps aller à gauche: ", policy_evaluation_on_line_world(pi=left_pi, lwe=LineWorldEnv()))
+    # print(f"Stratégie aléatoire: ", policy_evaluation_on_line_world(pi=random_pi, lwe=LineWorldEnv()))
+
+    test_pi = np.ones((len(LineWorldEnv().S), len(LineWorldEnv().A)))
+    print(f"Stratégie aléatoire: ", policy_iteration_on_line_world(pi=test_pi, lwe=LineWorldEnv()))
+
+
+    #print(policy_evaluation_on_line_world())
 
     #V = policy_evaluation_on_line_world()
 
@@ -341,9 +398,9 @@ def demo():
     #print(Q)
 
     #print(policy_iteration_on_line_world())
-    print(value_iteration_on_line_world())
+    #print(value_iteration_on_line_world())
 
-    # print(policy_evaluation_on_grid_world())
+    #print(policy_evaluation_on_grid_world())
     # print(policy_iteration_on_grid_world())
     # print(value_iteration_on_grid_world())
     #
