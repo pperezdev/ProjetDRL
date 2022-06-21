@@ -69,10 +69,34 @@ class LineWorldEnv:
             else:
                 self.p[s, 1, s + 1, 1] = 1.0
 
-
 ########## DONE ##########
-def policy_evaluation(pi: np.ndarray, lwe: LineWorldEnv):
-    theta = 0.0000002
+def policy_evaluation(pi: np.ndarray, lwe: LineWorldEnv, theta=0.9999):
+    """
+    _input:
+        π: Stratégie (policy)
+
+    _params: theta > 0
+
+    """
+    # Initialisation de V(s)
+    V = np.random.random((len(lwe.S), len(lwe.A), len(lwe.S), len(lwe.R)))
+    # Exception des V terminaux
+    V[0] = 0.0
+    V[6] = 0.0
+
+    while True:
+        delta = 0
+        sum_of_policy = 0.0
+        for s in lwe.S[1:-1]:
+            v = V[s]
+            # π(a|s): Probabilité d'executer une action a depuis l'état s selon la stratégie π
+            for a in lwe.A:
+                sum_of_policy *= pi[s, a]
+            V = sum(pi[s, lwe.A]) * sum()
+            pass
+
+    """
+    # np.zeros((len(self.S), len(self.A), len(self.S), len(self.R)))
 
     V = np.random.random((len(lwe.S),))
     V[0] = 0.0
@@ -94,6 +118,10 @@ def policy_evaluation(pi: np.ndarray, lwe: LineWorldEnv):
             delta = max(delta, np.abs(v - V[s]))
         if delta < theta:
             break
+    return V
+    
+    """
+
     return V
 
 
