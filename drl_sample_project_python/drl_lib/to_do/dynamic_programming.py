@@ -3,6 +3,7 @@ import random
 
 from ..do_not_touch.mdp_env_wrapper import Env1
 from ..do_not_touch.result_structures import ValueFunction, PolicyAndValueFunction
+from line_world import LineWorldEnv
 import numpy as np
 try:
     from grid_world import grid
@@ -52,25 +53,6 @@ def
 def
 def
 """
-########## DONE ##########
-class LineWorldEnv:
-    def __init__(self):
-        self.S = [0, 1, 2, 3, 4, 5, 6]
-        self.A = [0, 1]
-        self.R = [-1.0, 0.0, 1.0]
-
-        self.p = np.zeros((len(self.S), len(self.A), len(self.S), len(self.R)))
-
-        for s in self.S[1:-1]:
-            if s == 1:
-                self.p[s, 0, s - 1, 0] = 1.0
-            else:
-                self.p[s, 0, s - 1, 1] = 1.0
-
-            if s == 5:
-                self.p[s, 1, s + 1, 2] = 1.0
-            else:
-                self.p[s, 1, s + 1, 1] = 1.0
 
 ########## DONE ##########
 def policy_evaluation_on_line_world(pi: np.ndarray, lwe: LineWorldEnv, theta=0.0000001):
@@ -390,7 +372,7 @@ def value_iteration_on_secret_env1() -> PolicyAndValueFunction:
     pass
 
 
-def demo():
+def demo_test():
     right_pi = np.zeros((len(LineWorldEnv().S), len(LineWorldEnv().A)))
     right_pi[:, 1] = 1.0
 
@@ -404,7 +386,7 @@ def demo():
 
     random_pi = np.random.random((len(LineWorldEnv().S), len(LineWorldEnv().A)))
 
-    random_pi =np.random.random_integers(0, high=1, size=(len(LineWorldEnv().S), len(LineWorldEnv().A)))
+    random_pi = np.random.random_integers(0, high=1, size=(len(LineWorldEnv().S), len(LineWorldEnv().A)))
 
     # print(f"Stratégie tout le temps aller à droite: ", policy_evaluation_on_line_world(pi=right_pi, lwe=LineWorldEnv()))
     # print(f"Stratégie tout le temps aller à gauche: ", policy_evaluation_on_line_world(pi=left_pi, lwe=LineWorldEnv()))
@@ -426,6 +408,9 @@ def demo():
     #print(Q)
 
     print(policy_iteration_on_line_world(pi=random_pi, lwe=LineWorldEnv()))
+
+def demo():
+    demo_test()
     #print(value_iteration_on_line_world())
 
     #print(policy_evaluation_on_grid_world())

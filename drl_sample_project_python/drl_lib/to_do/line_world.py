@@ -23,12 +23,12 @@ def action_value_funtion(lwe, V, s, a, gamma):
     q = 0
 
     for p_sp, sp, r in lwe.p[s, a]:
-        # print("p_sp: ", p_sp)
-        # print("r: ", r)
-        # print("gamma: ", gamma)
-        # print("sp: ", sp)
-        # print("V: ", V)
-        # print("V[sp]: ", V[int(sp)])
+        print("p_sp: ", p_sp)
+        print("r: ", r)
+        print("gamma: ", gamma)
+        print("sp: ", sp)
+        print("V: ", V)
+        print("V[sp]: ", V[int(sp)])
         q += p_sp * (r + gamma * V[int(sp)])
 
     return q
@@ -63,26 +63,28 @@ def policy_improvement(lwe, V, gamma):
         q_s = np.zeros((lwe.A),)
 
         for a in lwe.A:
+            # print("V: ", V)
+            # print("s: ", s)
+            # print("a: ", a)
+            # print("gamma: ", gamma)
             q_s[a] = action_value_funtion(lwe, V, s, a, gamma)
 
         best_action = np.argmax(q_s)
         pi[s] = np.eye(lwe.A)[best_action]
     return pi
 
-if __name__ == "__main__":
+    #lwe = LineWorldEnv()
+    #V = np.zeros((len(lwe.S)),)
 
-    lwe = LineWorldEnv()
-    V = np.zeros((len(lwe.S)),)
+    #pi = np.ones((len(lwe.S), len(lwe.A))) * 0.5
 
-    pi = np.ones((len(lwe.S), len(lwe.A))) * 0.5
-
-    gamma = 0.999
-    theta = 0.0000001
+    #gamma = 0.999
+    #theta = 0.0000001
 
     # print(action_value_funtion(lwe, V, 1, 0, gamma))
     # print(policy_evaluation(lwe, V, gamma, theta))
-    V = policy_evaluation(lwe, V, gamma, theta)
-    print("old V: ", V)
-    print("impove V: ", policy_improvement(lwe, V, gamma))
+    #V = policy_evaluation(lwe, V, gamma, theta)
+    #print("old V: ", V)
+    #print("impove V: ", policy_improvement(lwe, V, gamma))
 
 
