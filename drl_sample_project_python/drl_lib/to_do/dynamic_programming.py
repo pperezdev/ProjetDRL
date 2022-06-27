@@ -174,16 +174,37 @@ def policy_iteration_on_line_world(pi: np.ndarray, lwe: LineWorldEnv, theta=0.00
         delta = 0
         for s in lwe.S:
             v = V[s]
-            V[s] = 0.0
+            # V[s] = 0.0
             for a in lwe.A:
                 total = 0.0
                 for sp in lwe.S:
                     for r in range(len(lwe.R)):
-                        total += lwe.p[sp, a, s, r] * (lwe.R[r] + gamma * V[sp])
-                        #total += lwe.p[sp, pi[s], s, r] * (lwe.R[r] + gamma * V[sp])
+                        # total += lwe.p[sp, a, s, r] * (lwe.R[r] + gamma * V[sp])
+                        # print(
+                            # f"lwe.R[r] ({type(lwe.R[r])}): {lwe.R[r]}",
+                            # f"gamma ({type(gamma)}): {gamma}",
+                            # f"V[sp] ({type(V[sp])}): {V[sp]}",
+                            # sep="\n"
+                        # )
+                        # print("###############################")
+                        # print(
+                            # f"sp ({type(sp)}): {sp}",
+                            # f"pi ({type(pi)}): {pi}",
+                            # f"pi[s] ({type(pi[s])}): {pi[s]}",
+                            # f"pi[s, a] ({type(pi[s, a])}): {pi[s, a]}",
+                            # f"s ({type(s)}): {s}",
+                            # f"s ({type(r)}): {r}",
+                            # sep="\n"
+                        # )
+
+                        # print(f"p(s',r|s,a) ({type(lwe.p[sp, int(pi[s, a]), s, r])}): {lwe.p[sp, int(pi[s, a]), s, r]}")
+
+                        total += lwe.p[sp, int(pi[s, a]), s, r] * (lwe.R[r] + gamma * V[sp])
+                        # print("total: ",total)
                         pass
-                total *= pi[s, a]
-                V[s] += total
+                # total *= pi[s, a]
+                V[s] = total
+                # print("V[s]: ", V[s])
             delta = max(delta, abs(v - V[s]))
         if delta < theta:
             break
@@ -192,7 +213,7 @@ def policy_iteration_on_line_world(pi: np.ndarray, lwe: LineWorldEnv, theta=0.00
     policy_stable = True
     for s in lwe.S:
         # old_action = pi[s]
-        old_action = pi[s]
+        old_action = V[s]
 
         ###################
 
@@ -214,8 +235,8 @@ def policy_iteration_on_line_world(pi: np.ndarray, lwe: LineWorldEnv, theta=0.00
                     total += lwe.p[sp, V, s, r] * (lwe.R[r] + gamma * V[sp])
             new_action = np.argmax(total)
             """
-            print("old_action : ", old_action, end="\n")
-            print("new_action : ", new_action)
+            # print("old_action : ", old_action, end="\n")
+            # print("new_action : ", new_action)
             if old_action != new_action:
                 policy_stable = False
 
@@ -376,14 +397,21 @@ def demo():
     left_pi = np.zeros((len(LineWorldEnv().S), len(LineWorldEnv().A)))
     left_pi[:, 0] = 1.0
 
-    random_pi = np.ones((len(LineWorldEnv().S), len(LineWorldEnv().A))) * 0.5
+    random_pi = np.random.random((len(LineWorldEnv().S), len(LineWorldEnv().A))) #* 0.5
+
+    #random_pi = np.zeros((len(LineWorldEnv().S), len(LineWorldEnv().A)))  # * 0.5
+    random_pi = np.ones((len(LineWorldEnv().S), len(LineWorldEnv().A)))  # * 0.5
+
+    random_pi = np.random.random((len(LineWorldEnv().S), len(LineWorldEnv().A)))
+
+    random_pi =np.random.random_integers(0, high=1, size=(len(LineWorldEnv().S), len(LineWorldEnv().A)))
 
     # print(f"Stratégie tout le temps aller à droite: ", policy_evaluation_on_line_world(pi=right_pi, lwe=LineWorldEnv()))
     # print(f"Stratégie tout le temps aller à gauche: ", policy_evaluation_on_line_world(pi=left_pi, lwe=LineWorldEnv()))
     # print(f"Stratégie aléatoire: ", policy_evaluation_on_line_world(pi=random_pi, lwe=LineWorldEnv()))
 
-    test_pi = np.ones((len(LineWorldEnv().S), len(LineWorldEnv().A)))
-    print(f"Stratégie aléatoire: ", policy_iteration_on_line_world(pi=test_pi, lwe=LineWorldEnv()))
+    # test_pi = np.ones((len(LineWorldEnv().S), len(LineWorldEnv().A)))
+    # print(f"Stratégie aléatoire: ", policy_iteration_on_line_world(pi=test_pi, lwe=LineWorldEnv()))
 
 
     #print(policy_evaluation_on_line_world())
@@ -397,7 +425,7 @@ def demo():
     #print("Action-Value Function:")
     #print(Q)
 
-    #print(policy_iteration_on_line_world())
+    print(policy_iteration_on_line_world(pi=random_pi, lwe=LineWorldEnv()))
     #print(value_iteration_on_line_world())
 
     #print(policy_evaluation_on_grid_world())
