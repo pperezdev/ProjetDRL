@@ -1,6 +1,6 @@
 from ..do_not_touch.result_structures import PolicyAndActionValueFunction
 from ..do_not_touch.single_agent_env_wrapper import Env2
-
+from drl_sample_project_python.drl_lib.to_do.environnements.tic_tac_toe.tic_tac_toe import *
 
 def monte_carlo_es_on_tic_tac_toe_solo() -> PolicyAndActionValueFunction:
     """
@@ -9,7 +9,9 @@ def monte_carlo_es_on_tic_tac_toe_solo() -> PolicyAndActionValueFunction:
     Returns the Optimal Policy (Pi(s,a)) and its Action-Value function (Q(s,a))
     """
     # TODO
-    pass
+    ttt = TicTacToe()
+    ttt.play()
+    return ""
 
 
 def on_policy_first_visit_monte_carlo_control_on_tic_tac_toe_solo() -> PolicyAndActionValueFunction:
@@ -72,9 +74,9 @@ def off_policy_monte_carlo_control_on_secret_env2() -> PolicyAndActionValueFunct
 
 def demo():
     print(monte_carlo_es_on_tic_tac_toe_solo())
-    print(on_policy_first_visit_monte_carlo_control_on_tic_tac_toe_solo())
+    """print(on_policy_first_visit_monte_carlo_control_on_tic_tac_toe_solo())
     print(off_policy_monte_carlo_control_on_tic_tac_toe_solo())
 
     print(monte_carlo_es_on_secret_env2())
     print(on_policy_first_visit_monte_carlo_control_on_secret_env2())
-    print(off_policy_monte_carlo_control_on_secret_env2())
+    print(off_policy_monte_carlo_control_on_secret_env2())"""
