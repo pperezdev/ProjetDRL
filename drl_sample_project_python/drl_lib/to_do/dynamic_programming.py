@@ -10,36 +10,7 @@ try:
     print("&")
 except:
     pass
-########## GLOSSAIRE
-"""
-s,s': Un état
-a: Un action
-r: Une récompense
-S: Ensemble des états non terminaux
-S+: Ensemble des états (inclue les états terminaux)
-A(s): Ensemble d'action dans un état s
-R: Ensemble des récompenses disponibles
-π: Stratégie
-π(s): Action prise depuis l'état s en suivant la stratégie π
-π(a|s): Probabilité d'executer une action a depuis l'état s selon la stratégie π
-p(s',r|s,a): Probabilité de transition s->s' avec récompense en effectuant l'action a
-p(s'|s,a): Probabilité de transition s->s' en effectuant l'action a
-r(s,a): Récompense de l'état s après l'action a
-r(s,a,s'): Récompense de la transition s->s' selon l'action a
 
-states-value function: 
-    v_π(s): Valeur de l'état s selon la stratégie π
-    v_*(s): Valeur de l'état s selon la stratégie π optimal
-    
-action-values fonction:
-    q_π(s,a): Valeur de prendre l'action a depuis l'état s selon la stratégie π
-    q_*(s,a): Valeur de prendre l'action a depuis l'état s selon la stratégie π optimal
-    
-V ou Vt: Tableau d'estimations de la fonction état-valeur (states-value function: v_π ou v_*)
-Q ou Qt: Tableau d'estimations de la fonction action-valeur (action-value function: q_π ou q_*)
-
- 
-"""
 
 ########## TO-DO
 """
@@ -226,31 +197,6 @@ def policy_iteration_on_line_world(pi: np.ndarray, lwe: LineWorldEnv, theta=0.00
             break
 
     return V
-            
-
-
-
-    """
-    lwe = LineWorldEnv()
-
-    # INITIALISATION
-    policy = np.ones((len(lwe.S), len(lwe.A))) * 1 / (len(lwe.S) - len(lwe.A))
-
-    while True:
-        # POLICY EVALUATION
-        V = policy_evaluation(policy, lwe)
-
-        # POLICY IMPROVEMENT
-        new_policy = policy_improvement(lwe, V)
-
-        # comparaison nouvelle policy et ancienne == : si oui -> break
-        if V == new_policy:
-            break
-        policy = copy.copy(new_policy)
-
-    return policy
-    """
-
 
 def value_iteration_on_line_world() -> PolicyAndValueFunction:
     """
