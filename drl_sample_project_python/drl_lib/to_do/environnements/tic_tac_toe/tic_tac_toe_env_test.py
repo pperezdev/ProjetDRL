@@ -120,6 +120,22 @@ class TicTacToeEnv:
 
 
 
+
 class Player:
-    pass
+    def __init__(self):
+        self.personnage = "human"
+
+    def start_game(self, char):
+        print("\nNew game!")
+
+    def move(self, board):
+        return int(input("Your move? "))
+
+    def reward(self, value, board):
+        print("{} rewarded: {}".format(self.personnage, value))
+
+    def available_moves(self, board):
+        return [i+1 for i in range(0,9) if board[i] == ' ']
+
+
 

@@ -1,13 +1,14 @@
 import random
 
+
 class TicTacToe:
-    def __init__(self):
+    def __init__(self, p1, p2):
         self.board = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
-        self.p1 = 'X'
-        self.p2 = 'O'
+        self.p1 = 'X', p1
+        self.p2 = 'O', p2
 
     def random_play(self) -> int:
-         return int(random.uniform(1, 10))
+        return int(random.uniform(1, 10))
 
     def print_board(self):
         print("-------------")
@@ -59,13 +60,14 @@ class TicTacToe:
             return self.random_play()
         else:
             return int(input("case 1 - 9: "))
+
     def play(self):
         p = self.p1
         while not self.victory():
             x = self.chose_case(p)
 
             if x > 0 and x < 10:
-                if self.action(p, x-1):
+                if self.action(p, x - 1):
                     p = self.change_player(p)
             else:
                 print("Input case between 1 - 9")

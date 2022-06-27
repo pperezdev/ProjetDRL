@@ -12,7 +12,7 @@ class LineWorldEnv:
             if s == 1:
                 self.p[s, 0, s - 1, 0] = 1.0
             else:
-                self.p[s, 0, s - 1, 1] = 1.0
+                self.p[s, 0, s - 1, @1] = 1.0
 
             if s == 5:
                 self.p[s, 1, s + 1, 2] = 1.0
@@ -23,19 +23,18 @@ def action_value_funtion(lwe, V, s, a, gamma):
     q = 0
 
     for p_sp, sp, r in lwe.p[s, a]:
-        print("p_sp: ", p_sp)
-        print("r: ", r)
-        print("gamma: ", gamma)
-        print("sp: ", sp)
-        print("V: ", V)
-        print("V[sp]: ", V[int(sp)])
+        # print("p_sp: ", p_sp)
+        # print("r: ", r)
+        # print("gamma: ", gamma)
+        # print("sp: ", sp)
+        # print("V: ", V)
+        # print("V[sp]: ", V[int(sp)])
         q += p_sp * (r + gamma * V[int(sp)])
 
     return q
 
 # Policy Evaluation
 def policy_evaluation(lwe, V, gamma, theta):
-    pi = []
     while True:
         delta = 0
 
@@ -89,7 +88,7 @@ def policy_improvement(lwe, V, gamma):
     #print("old V: ", V)
     #print("impove V: ", policy_improvement(lwe, V, gamma))
 
-def policy_iteration_on_line_world_NEW(pi: np.ndarray, lwe: LineWorldEnv, theta=0.0000001) -> PolicyAndValueFunction:
+def policy_iteration_on_line_world_NEW(pi: np.ndarray, lwe: LineWorldEnv, theta=0.0000001):
     """
     Creates a Line World of 7 cells (leftmost and rightmost are terminal, with -1 and 1 reward respectively)
     Launches a Policy Iteration Algorithm in order to find the Optimal Policy and its Value Function
@@ -179,7 +178,7 @@ def policy_iteration_on_line_world_NEW(pi: np.ndarray, lwe: LineWorldEnv, theta=
 
     return V
 
-def value_iteration_on_line_world() -> PolicyAndValueFunction:
+def value_iteration_on_line_world():
     """
     Creates a Line World of 7 cells (leftmost and rightmost are terminal, with -1 and 1 reward respectively)
     Launches a Value Iteration Algorithm in order to find the Optimal Policy and its Value Function
@@ -281,9 +280,27 @@ def policy_improvement(lwe: LineWorldEnv, V):
         policy[s] = np.sum([np.eye(lwe.A)[i] for i in best_action], axis=0) / len(best_action)
     return policy
 
+#####################################
+#####################################
+#####################################
+
+lwe = LineWorldEnv()
+pi = np.ones((len(lwe.S), len(lwe.A))) * 0.5
+V = np.zeros((len(lwe.S),))
+gamma = 0.99 #facteur de remise du return
+theta = 0.00001 #seuil de similitude requis pour stopper les updates
+
+action_value = policy_evaluation(lwe, V, gamma, theta)
+print("pi: ", pi)
+print("V: ", V)
+print("action_value: ", action_value)
+
+policy_eval = policy_evaluation(lwe, V, gamma, theta)
+print("policy_eval: ", pi)
+
 # List of calls to debug in class functions
 """
-right_pi = np.zeros((len(LineWorldEnv().S), len(LineWorldEnv().A)))
+    right_pi = np.zeros((len(LineWorldEnv().S), len(LineWorldEnv().A)))
     right_pi[:, 1] = 1.0
 
     left_pi = np.zeros((len(LineWorldEnv().S), len(LineWorldEnv().A)))
