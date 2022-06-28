@@ -9,6 +9,8 @@ def monte_carlo_es(N : int, E : pd.DataFrame):
         E2 = E.copy()
         for e in E:
             u = random.uniform(1,10)
-            if u > p(e)
+            if u > p(e):
                 E2.drop(e)
-        if
+        #if:
+
+    pass

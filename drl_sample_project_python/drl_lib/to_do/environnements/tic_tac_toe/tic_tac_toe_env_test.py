@@ -119,8 +119,6 @@ class TicTacToeEnv:
         self.create_board()
 
 
-
-
 class Player:
     def __init__(self):
         self.personnage = "human"
@@ -135,7 +133,4 @@ class Player:
         print("{} rewarded: {}".format(self.personnage, value))
 
     def available_moves(self, board):
-        return [i+1 for i in range(0,9) if board[i] == ' ']
-
-
-
+        return [i + 1 for i in range(0, 9) if board[i] == ' ']

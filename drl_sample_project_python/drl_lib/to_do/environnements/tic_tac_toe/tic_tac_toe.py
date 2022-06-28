@@ -2,10 +2,10 @@ import random
 
 
 class TicTacToe:
-    def __init__(self, p1, p2):
+    def __init__(self):
         self.board = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
-        self.p1 = 'X', p1
-        self.p2 = 'O', p2
+        self.p1 = 'X'
+        self.p2 = 'O'
 
     def random_play(self) -> int:
         return int(random.uniform(1, 10))

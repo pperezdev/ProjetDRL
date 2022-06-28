@@ -7,8 +7,8 @@ import drl_lib.to_do.algorithmes.q_learning as qLearning
 
 if __name__ == "__main__":
     #dynamic_programming.demo()
-    #monte_carlo_methods.demo()
+    monte_carlo_methods.demo()
     #temporal_difference_learning.demo()
-    qLearning.demo()
+    #qLearning.demo()
 
 

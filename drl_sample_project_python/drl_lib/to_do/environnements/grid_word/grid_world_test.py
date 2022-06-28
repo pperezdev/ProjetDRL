@@ -2,6 +2,7 @@ from drl_sample_project_python.drl_lib.do_not_touch.mdp_env_wrapper import Env1
 from drl_sample_project_python.drl_lib.do_not_touch.result_structures import ValueFunction, PolicyAndValueFunction
 import numpy as np
 
+
 class GridWorld:
     def __init__(self, width, height, start):
         self.width = width
@@ -41,13 +42,13 @@ class GridWorld:
         """
         if action in self.actions[self.i, self.j]:
             if action == 'U':
-                self.i +=1
+                self.i += 1
             elif action == "D":
-                self.i -=1
+                self.i -= 1
             elif action == "R":
-                self.j +=1
+                self.j += 1
             elif action == "L":
-                self.j -=1
+                self.j -= 1
 
         return self.rewards(self.i, self.j)
 
@@ -60,14 +61,14 @@ class GridWorld:
 
 def grid():
     grd = GridWorld(5, 5, (2, 0))
-    rewards = {(0,4):1, (1,4):-1}
+    rewards = {(0, 4): 1, (1, 4): -1}
     actions = {
-        (0,0): ('D', 'R'),
-        (0,1): ('D', 'R', 'L'),
+        (0, 0): ('D', 'R'),
+        (0, 1): ('D', 'R', 'L'),
         (0, 2): ('R', 'L'),
         (0, 3): ('D', 'R', 'L'),
 
-        (1,0): ('U', 'D', 'R'),
+        (1, 0): ('U', 'D', 'R'),
         (1, 1): ('U', 'D', 'L'),
         (1, 3): ('U', 'D', 'R'),
 
@@ -92,15 +93,15 @@ def grid():
     grd.set(rewards, actions)
     return grd
 
+
 # ---------------------------------------------------------------------------------------------------------------------
 #                                                Grid World
 # ---------------------------------------------------------------------------------------------------------------------
 
 
-ALL_POSSIBLE_ACTIONS = ('U','D','L','R')
+ALL_POSSIBLE_ACTIONS = ('U', 'D', 'L', 'R')
 GAMMA = 1
 thresold = 10e-4
-
 
 
 def policy_evaluation_on_grid_world(V, gamma) -> ValueFunction:
@@ -161,7 +162,7 @@ def policy_iteration_on_grid_world() -> PolicyAndValueFunction:
         # policy evaluation
         policy_evaluation_on_grid_world(V, GAMMA)
 
-        #policy improvement step
+        # policy improvement step
         is_policy_converged = True
         for s in states:
             if s in policy:
@@ -186,7 +187,7 @@ def policy_iteration_on_grid_world() -> PolicyAndValueFunction:
                     is_policy_converged = False
         if is_policy_converged:
             break
-    return V
+    return V, policy
 
 
 def value_iteration_on_grid_world() -> PolicyAndValueFunction:
@@ -198,19 +199,19 @@ def value_iteration_on_grid_world() -> PolicyAndValueFunction:
     # TODO
     create_grid = grid()
 
-    #randomly instantiate
+    # randomly instantiate
     policy = {}
     for s in create_grid.actions.keys():
         policy[s] = np.random.choice(ALL_POSSIBLE_ACTIONS)
 
-    #initialize V(s) randomly between 0 and 1
+    # initialize V(s) randomly between 0 and 1
     V = {}
     states = create_grid.all_states()
     for s in states:
         if s in create_grid.actions:
             V[s] = np.random.random()
         else:
-            #terminal state so we set Value to 0
+            # terminal state so we set Value to 0
             V[s] = 0
 
     while True:

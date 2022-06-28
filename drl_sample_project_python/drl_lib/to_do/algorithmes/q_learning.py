@@ -7,7 +7,6 @@ import numpy as np
 import random
 
 
-
 class QLearner(Player):
     def __init__(self, epsilon=0.2, alpha=0.3, gamma=0.9):
         self.q = {}
@@ -43,7 +42,6 @@ class QLearner(Player):
         self.last_move = actions[i]
         return actions[i]
 
-
     def reward(self, value, board):
         """
         Take action (a) and get reward (r), transit to next state (s)
@@ -68,18 +66,10 @@ def q_learning_on_tic_tac_toe_solo() -> PolicyAndActionValueFunction:
     Experiment with different values of hyper parameters and choose the most appropriate combination
     """
     p1 = QLearner()
-    p2 = QLearner
 
-    for i in range(0,200000):
-        env = TicTacToe(p1,p2)
-        env.__init__(p1, p2)
+
+
 
 
 def demo():
     print(q_learning_on_tic_tac_toe_solo())
-
-
-
-
-
-
